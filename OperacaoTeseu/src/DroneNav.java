@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -5,7 +6,6 @@ import java.util.*;
 
 public class DroneNav {
     private Map<Integer, List<Integer>> adjCams;
-
 
     public DroneNav(){
         this.adjCams = new HashMap<>();
@@ -40,43 +40,48 @@ public class DroneNav {
     public List<Integer> getVizinhos(int v){
         return adjCams.getOrDefault(v, Collections.emptyList());
     }
+
     public Map<Integer, List<Integer>> getAdjCams(){
         return adjCams;
     }
-    public void startMappingDFS(int droneStart, Set<Integer> visited) {
-        dfs(droneStart, visited);
-        System.out.println();
 
-        if (visited.size() != adjCams.size()) {
-            System.out.println("Mapeamento incompleto. Áreas inacessíveis detectadas.");
+    public void startMappingDFS(DroneNav drone, int startNode, Set<Integer> visited){
+        if(visited.contains(startNode)){
+            return;
+        }
+
+        visited.add(startNode);
+        System.out.print(startNode + " ");
+
+        for(int vizinho : drone.getVizinhos(startNode)){
+            if(!visited.contains(vizinho)){
+                startMappingDFS(drone, vizinho, visited);
+            }
+        }
+
+        if(visited.size() != getTodosNos().size()){
+            System.out.println("Mapeamento incompleto. Areas inacessiveis detectadas");
+            return;
         }
     }
 
-    private void dfs(int node, Set<Integer> visited) {
-        if (visited.contains(node)) return;
-
-        visited.add(node);
-        System.out.print(node + " ");
-
-        for (int vizinho : getVizinhos(node)) {
-            if (!visited.contains(vizinho)) {
-                dfs(vizinho, visited);
-            }
-        }
+    public Set<Integer> getTodosNos(){
+        return adjCams.keySet();
     }
 
     public void findShorttestPathBFS(int startNode, int targetNode){
         System.out.print("Rota de Resgate BFS: ");
 
-        Queue<Integer> fila = new LinkedList<>();
-        boolean[] visited = new boolean[getAdjCams().size()];
+        int maxNode = adjCams.keySet().stream().max(Integer::compareTo).orElse(0);
 
-        int[] pai = new int[getAdjCams().size()];
+        Queue<Integer> fila = new LinkedList<>();
+        boolean[] visited = new boolean[maxNode + 1];
+
+        int[] pai = new int[maxNode + 1];
         Arrays.fill(pai, -1);
 
         fila.add(startNode);
         visited[startNode] = true;
-        pai[startNode] = -1;
 
         boolean encontrado = false;
 
@@ -97,7 +102,7 @@ public class DroneNav {
         }
 
         if (!encontrado){
-            System.out.println("Alvo inalcançável");
+            System.out.println("Alvo inalcancavel\n");
             return;
         }
 
@@ -111,7 +116,7 @@ public class DroneNav {
 
         Collections.reverse(caminho);
 
-        for (int i = 0; i< caminho.size(); i++){
+        for(int i = 0; i < caminho.size(); i++){
             System.out.print(caminho.get(i) + " ");
         }
 
