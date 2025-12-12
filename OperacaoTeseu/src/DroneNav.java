@@ -71,13 +71,11 @@ public class DroneNav {
 
     public void findShorttestPathBFS(int startNode, int targetNode){
         System.out.print("Rota de Resgate BFS: ");
-
-        int maxNode = adjCams.keySet().stream().max(Integer::compareTo).orElse(0);
-
+        
         Queue<Integer> fila = new LinkedList<>();
-        boolean[] visited = new boolean[maxNode + 1];
+        boolean[] visited = new boolean[adjCams.size()];
 
-        int[] pai = new int[maxNode + 1];
+        int[] pai = new int[adjCams.size()];
         Arrays.fill(pai, -1);
 
         fila.add(startNode);
@@ -116,10 +114,11 @@ public class DroneNav {
 
         Collections.reverse(caminho);
 
-        for(int i = 0; i < caminho.size(); i++){
+        for (int i = 0; i< caminho.size(); i++){
             System.out.print(caminho.get(i) + " ");
         }
 
         System.out.println();
     }
 }
+
