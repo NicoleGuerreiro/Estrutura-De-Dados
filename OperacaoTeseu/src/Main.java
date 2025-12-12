@@ -9,9 +9,9 @@ public class Main {
 
         System.out.print("Mapeamento DFS (Ordem): ");
         Set<Integer> visitados = new HashSet<>();
-        drone.startMappingDFS(0, visitados);
+        drone.startMappingDFS(drone,0, visitados);
         System.out.println("\n");
-        drone.findShorttestPathBFS(0, 4);
+        drone.findShorttestPathBFS(0, 5);
 
     }
 }
